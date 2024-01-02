@@ -47,15 +47,16 @@ class App(QWidget):
         text = pyperclip.paste()
         src_lang = translator.detect(text).lang
         keyboard.send("alt+tab")
-        keyboard.write(translator.translate(text, src = src_lang, dest='uk' if src_lang == 'en' else 'en').text)
-        notification.notify(title = "Keyboard-Switcher",message = text)
+        translated = translator.translate(text, src = src_lang, dest='uk' if src_lang == 'en' else 'en').text
+        keyboard.write(translated)
+        notification.notify(title = "Power-Toy",message = translated)
         # self.label.setText(translator.translate(text, src = src_lang, dest='uk' if src_lang == 'en' else 'en').text)
         exit()
     def on_click2(self):
         text = pyperclip.paste()
         keyboard.send("alt+tab")
         try:transliterated = "".join([dictionary[i] for i in text])
-        except:transliterated = "".join([[k for k, v in dictionary.items() if v == i][0] for i in text])
+        except:transliterated = "".join([key for value in dictionary.values() if (key := next((k for k, v in dictionary.items() if v == value), None)) is not None])
         time.sleep(0.2)
         keyboard.write(transliterated)
         exit()
@@ -67,3 +68,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = App()
     app.exec()
+
